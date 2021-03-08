@@ -1,0 +1,14 @@
+@charset "utf-8";
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+$beige-lighter: #ccc4bf;
+$desktop: 700px;
+$purple: #8a4d76;
+
+// update bulma's global variable
+$primary: $purple;
+$fullhd-enabled: false;
+$widescreen-enabled: false;
+$body-background-color: $beige-lighter;
+
+@import "bulma/bulma.sass";

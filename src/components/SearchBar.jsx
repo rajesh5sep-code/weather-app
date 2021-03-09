@@ -4,12 +4,10 @@ import axios from "axios";
 
 function SearchBar(props) {
   const [city, setCity] = useState("");
-  const [weather, setWeather] = useState({});
 
   useEffect(() => {
     console.log(`City is ${city}`);
-    console.log(`Weather  is ${JSON.stringify(weather)}`);
-  }, [city, weather]);
+  }, [city]);
 
   function handleSubmit(event) {
     console.log(event);
@@ -19,21 +17,46 @@ function SearchBar(props) {
     let apiEndpoint = "https://api.openweathermap.org/data/2.5/weather?";
     let apiUrl = `${apiEndpoint}q=${city}&units=${unit}&appid=${apiKey}`;
 
-    axios.get(apiUrl).then(displayCurrentTemperature);
+    axios.get(apiUrl).then(displayTemperature).catch(handleHttpErrors);
 
     apiEndpoint = "https://api.openweathermap.org/data/2.5/forecast?";
     apiUrl = `${apiEndpoint}q=${city}&units=${unit}&appid=${apiKey}`;
   }
 
-  function displayCurrentTemperature({ data }) {
+  function displayTemperature({ data }) {
     console.log(data);
-    props.onCityChange(data);
+    data
+      ? props.onCityChange({ ...data, isLoaded: true })
+      : props.onCityChange({ isLoaded: false });
   }
-
+  function handleHttpErrors({ response }) {
+    if (response) {
+      alert(response.data.message);
+    }
+  }
   function handleChange({ target }) {
     setCity(target.value);
   }
 
+  function displayCurrentLocation(postions) {
+    var latitude = postions.coords.latitude;
+    var longitude = postions.coords.longitude;
+
+    let apiKey = "606a063f1d6fa729e32e75a0af2c3ff9";
+    let units = "metric";
+    let apiEndpoint = "https://api.openweathermap.org/data/2.5/weather?";
+    let apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+    axios.get(apiUrl).then(displayTemperature).catch(handleHttpErrors);
+    apiEndpoint = "https://api.openweathermap.org/data/2.5/forecast?";
+    apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+
+    //axios.get(apiUrl).then(displayWeatherForecast);
+  }
+
+  function handleCurrentCity(event) {
+    event.preventDefault();
+    navigator.geolocation.getCurrentPosition(displayCurrentLocation);
+  }
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -53,7 +76,9 @@ function SearchBar(props) {
               type="submit"
               value="Search"
             />
-            <button className="button">Current City</button>
+            <button className="button" onClick={handleCurrentCity}>
+              Current City
+            </button>
           </div>
         </div>
       </form>

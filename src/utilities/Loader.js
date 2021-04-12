@@ -1,14 +1,13 @@
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from "react-loader-spinner";
+import loaderCss from "../styles/Loader.module.scss";
 
-export default LoaderComponent = () => {
+const LoaderComponent = () => {
   return (
-    <Loader
-      type="Puff"
-      color="#00BFFF"
-      height={20}
-      width={30}
-      timeout={3000} //3 secs
-    />
+    <div className={loaderCss.loader}>
+      <Loader type="Circles" color="#0400ff" height={80} width={80} />
+    </div>
   );
 };
+
+export default LoaderComponent;

@@ -4,6 +4,7 @@ import WeatherDetails from "./WeatherDetails";
 import HourlyForcastContainer from "./HourlyForcastContainer";
 import axios from "axios";
 import Loader from "react-loader-spinner";
+import LoaderComponent from "../utilities/Loader";
 
 function MainContainer() {
   const [unitOfTemperature, setUnit] = useState("metric");
@@ -14,10 +15,10 @@ function MainContainer() {
   const [weather, setWeather] = useState({});
   const [forcast, setForcast] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   useEffect(() => {}, [weather]);
 
   function handleCityChange(data) {
-    console.log(data);
     if (data) {
       setIsLoaded(true);
       setWeather({
@@ -53,6 +54,11 @@ function MainContainer() {
     });
   }
 
+  function handleSearching(data) {
+    console.log("Searching...", data);
+    setIsSearching(data);
+  }
+
   function WeatherAndForcast() {
     return (
       <>
@@ -68,11 +74,16 @@ function MainContainer() {
   return (
     <section className={`section is-fluid`}>
       <div className="container is-max-desktop">
-        <SearchBar onCityChange={handleCityChange} />
+        <SearchBar
+          onCityChange={handleCityChange}
+          onSearching={handleSearching}
+        />
         {isLoaded ? (
           <WeatherAndForcast />
+        ) : isSearching ? (
+          <LoaderComponent />
         ) : (
-          <Loader type="Circles" color="#0400ff" height={80} width={80} />
+          <div></div>
         )}
       </div>
     </section>

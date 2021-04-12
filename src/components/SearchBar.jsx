@@ -1,31 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "../styles/SearchBar.module.scss";
-import Loader from "react-loader-spinner";
 import axios from "axios";
 
 function SearchBar(props) {
+  const [isSearching, setSearching] = useState(false);
   const [city, setCity] = useState("");
   const [unitOfTemperature, setUnit] = useState("metric");
+  useEffect(() => {
+    props.onSearching(isSearching);
+  }, [isSearching]);
+
   const apiKey = "606a063f1d6fa729e32e75a0af2c3ff9";
   const unit = unitOfTemperature;
   let baseUrl = "https://api.openweathermap.org/data/2.5";
 
   function handleSubmit(event) {
-    console.log(event);
     event.preventDefault();
-
     getWeather().then(displayTemperature).catch(handleHttpErrors);
   }
 
   function getWeather() {
+    setSearching(true);
+    //props.onSearching(isSearching);
     const apiUrl = `${baseUrl}/weather?q=${city}&units=${unit}&appid=${apiKey}`;
     return axios.get(apiUrl);
   }
 
   function displayTemperature({ data }) {
-    console.log(data);
+    setSearching(false);
+    //props.onSearching(isSearching);
+
     data
-      ? props.onCityChange({ ...data, isLoaded: true })
+      ? props.onCityChange({
+          ...data,
+          isLoaded: true,
+          isSearching: isSearching,
+        })
       : props.onCityChange({ isLoaded: false });
   }
   function handleHttpErrors({ response }) {

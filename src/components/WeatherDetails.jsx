@@ -10,22 +10,29 @@ function WeatherDetails(props) {
         <div className={css.dayTime}>{formatDate(props.weather.dateTime)}</div>
       </div>
       <div className="columns">
-        <div className={`column`}>
-          <img
-            src={props.weather.imageUrl}
-            alt="weather icon"
-            id="weather-img"
-          />
-          <span className={css.temperature}>
-            {Math.round(props.weather.mainTemperature)}
-          </span>
-          <div className={css.unitsDescription}>
-            <div>
+        <div className={`column`} style={{ display: "inline-block" }}>
+          <div>
+            <img
+              src={props.weather.imageUrl}
+              alt="weather icon"
+              id="weather-img"
+            />
+            <span
+              className={css.temperature}
+              style={{ display: "inline-block" }}
+            >
+              {Math.round(props.weather.mainTemperature)}
+            </span>
+            <div className={css.unitsDescription}>
               <a>°C</a>|<a>°F</a>
             </div>
-            <div>{props.weather.description}</div>
           </div>
+
+          <p style={{ position: "relative", left: "100px" }}>
+            {props.weather.description}
+          </p>
         </div>
+
         <div className="column">
           <div>
             <div>

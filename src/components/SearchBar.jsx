@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import css from "../styles/SearchBar.module.scss";
+import Loader from "react-loader-spinner";
 import axios from "axios";
 
 function SearchBar(props) {
   const [city, setCity] = useState("");
-
-  useEffect(() => {
-    console.log(`City is ${city}`);
-  }, [city]);
+  const [unitOfTemperature, setUnit] = useState("metric");
+  const apiKey = "606a063f1d6fa729e32e75a0af2c3ff9";
+  const unit = unitOfTemperature;
+  let baseUrl = "https://api.openweathermap.org/data/2.5";
 
   function handleSubmit(event) {
     console.log(event);
     event.preventDefault();
-    let apiKey = "606a063f1d6fa729e32e75a0af2c3ff9";
-    let unit = "metric";
-    let apiEndpoint = "https://api.openweathermap.org/data/2.5/weather?";
-    let apiUrl = `${apiEndpoint}q=${city}&units=${unit}&appid=${apiKey}`;
 
-    axios.get(apiUrl).then(displayTemperature).catch(handleHttpErrors);
+    getWeather().then(displayTemperature).catch(handleHttpErrors);
+  }
 
-    apiEndpoint = "https://api.openweathermap.org/data/2.5/forecast?";
-    apiUrl = `${apiEndpoint}q=${city}&units=${unit}&appid=${apiKey}`;
+  function getWeather() {
+    const apiUrl = `${baseUrl}/weather?q=${city}&units=${unit}&appid=${apiKey}`;
+    return axios.get(apiUrl);
   }
 
   function displayTemperature({ data }) {
@@ -49,8 +48,6 @@ function SearchBar(props) {
     axios.get(apiUrl).then(displayTemperature).catch(handleHttpErrors);
     apiEndpoint = "https://api.openweathermap.org/data/2.5/forecast?";
     apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
-
-    //axios.get(apiUrl).then(displayWeatherForecast);
   }
 
   function handleCurrentCity(event) {
